@@ -1,17 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"lf/gochat/db"
+	"lf/gochat/internal/user"
+	"lf/gochat/router"
 	"log"
 )
 
 func main() {
-	_, err := db.NewDatabase()
+	db, err := db.NewDatabase()
 
 	if err != nil {
 		log.Fatalf("could not initialize database connection %s:", err)
 	}
 
-	fmt.Println("database connected")
+	userRepository := user.NewRepository(db.GetDb())
+	userService := user.NewService(userRepository)
+	userHandler := user.NewHandler(userService)
+
+	router.InitRouter(userHandler)
+	router.Start("0.0.0.0:8080")
 }

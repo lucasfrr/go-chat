@@ -1,13 +1,22 @@
 postgresinit:
-	docker run --name pg_chat_db -p 5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=chatdb -d postgres
+	docker run --name postgres15 -p 5433:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -d postgres
 
 postgres:
-	docker exec -it pg_chat_db psql --username=postgres
+	docker exec -it postgres15 psql --username=postgres
 
 createdb:
-	docker exec -it pg_chat_db createdb --username=postgres --owner=postgres chatdb
+	docker exec -it postgres15 createdb --username=postgres --owner=postgres go-chat
 
 dropdb:
-	docker exec -it pg_chat_db dropdb chatdb --username=postgres
+	docker exec -it postgres15 dropdb go-chat
 
-.PHONY: postgresinit postgres createdb dropdb
+migrateup:
+	migrate -path db/migrations -database "postgresql://postgres:password@localhost:5433/go-chat?sslmode=disable" -verbose up
+
+migratedown:
+	migrate -path db/migrations -database "postgresql://postgres:password@localhost:5433/go-chat?sslmode=disable" -verbose down
+
+serve:
+	go run cmd/main.go
+
+.PHONY: postgresinit postgres createdb dropdb migrateup migratedown serve
