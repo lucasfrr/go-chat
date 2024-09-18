@@ -11,7 +11,7 @@ type Database struct {
 }
 
 func NewDatabase() (*Database, error) {
-	db, err := sql.Open("postgres", "postgresql://postgres:password@localhost:5432/chat-db?sslmode=disable")
+	db, err := sql.Open("postgres", "postgresql://postgres:password@localhost:5433/go-chat?sslmode=disable")
 
 	if err != nil {
 		return nil, err
