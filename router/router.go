@@ -18,6 +18,8 @@ func InitRouter(userHandler *user.Handler, webSktHandler *webskt.Handler) {
 
 	router.POST("/rooms/create", webSktHandler.CreateRoom)
 	router.GET("/rooms/join/:roomId", webSktHandler.JoinRoom)
+	router.GET("/rooms", webSktHandler.GetRooms)
+	router.GET("/rooms/clients/:roomId", webSktHandler.GetRoomClients)
 }
 
 func Start(address string) error {
